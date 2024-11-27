@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Eligibility Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function validateForm() {
+            const quizTotal = parseFloat(document.forms["studentForm"]["quiz_total"].value);
+            const attendance = parseFloat(document.forms["studentForm"]["attendance"].value);
+            const grandTotal = parseFloat(document.forms["studentForm"]["grand_total"].value);
+            
+            let errorMessage = "";
+
+            // Validate Quiz Total
+            if (quizTotal < 0 || quizTotal > 7500) {
+                errorMessage += "Quiz Total must be between 0 and 7500.<br>";
+            }
+            // Validate Attendance
+            if (attendance < 0 || attendance > 100) {
+                errorMessage += "Attendance must be between 0 and 100.<br>";
+            }
+            // Validate Grand Total
+            if (grandTotal < 0 || grandTotal > 100) {
+                errorMessage += "Grand Total must be between 0 and 100.<br>";
+            }
+
+            // Display error message if any, otherwise allow form submission
+            const errorDisplay = document.getElementById("error-message");
+            if (errorMessage) {
+                errorDisplay.innerHTML = errorMessage;
+                errorDisplay.style.display = "block";
+                return false; // Prevent form submission
+            } else {
+                errorDisplay.style.display = "none";
+                return true; // Allow form submission
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Eligibility Predictor</h1>
+        <p>Enter the student scores below:</p>
+
+        <!-- Form with validation -->
+        <form name="studentForm" action="/predict" method="post" onsubmit="return validateForm();">
+            <label>Quiz Total (0 - 7500):</label>
+            <input type="number" name="quiz_total" required><br>
+
+            <label>Attendance % (0 - 100):</label>
+            <input type="number" step="0.01" name="attendance" required><br>
+
+            <label>Grand Total (0 - 100):</label>
+            <input type="number" name="grand_total" required><br>
+
+            <button type="submit">Predict Eligibility</button>
+        </form>
+
+        <!-- Error message display -->
+        <div id="error-message" style="color: red; display: none;"></div>
+    </div>
+</body>
+</html>
